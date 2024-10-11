@@ -2,6 +2,7 @@ package org.launchcode;
 
 import javax.lang.model.element.Name;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class MenuItem {
     private String Name;
@@ -10,11 +11,12 @@ public class MenuItem {
     private LocalDate Dateadded;
     private String Category;
 
-    public MenuItem(String name, String description, double price, LocalDate dateadded, String category) {
+    public MenuItem(String name, String description, double price, String category) {
         Name = name;
         Description = description;
         Price = price;
-        Dateadded = dateadded;
+        Dateadded = LocalDate.now();
+        //Dateadded = LocalDate.parse("2020-10-10");
         Category = category;
     }
 
@@ -50,11 +52,33 @@ public class MenuItem {
         Price = price;
     }
 
-    public void setDateadded(LocalDate dateadded) {
-        Dateadded = dateadded;
-    }
 
     public void setCategory(String category) {
         Category = category;
+    }
+    Boolean isNew(){
+        LocalDate today = LocalDate.now();
+        double daysnum = getDateadded().until(today, ChronoUnit.DAYS);
+        return daysnum < 90;
+    }
+
+    @Override
+    public String toString(){
+        return getName() +"-" + (isNew() ? "-New!":"") + " | " + getDescription() + " | $" + getPrice() + " | " + getCategory();
+    }
+
+    @Override
+    public boolean equals(Object tobeCompared){
+        if(this == tobeCompared){
+            return true;
+        }
+        if(tobeCompared==null){
+            return false;
+        }
+        if(getClass() != tobeCompared.getClass()){
+            return false;
+        }
+        MenuItem otherItem = (MenuItem)tobeCompared;
+        return this.Name.equals(otherItem.getName());
     }
 }
